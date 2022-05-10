@@ -1,0 +1,96 @@
+{% extends "flashcards/base.html" %}
+{% load static %}
+{% load flashcards_tags %}
+
+
+{% block head %}
+    <style>
+    .link{
+        text-decoration: none;
+        font-weight: bold;
+        }
+    .word.accordion-button::after{
+    display: none;}
+    #footer{
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    }
+    </style>
+{% endblock %}
+
+{% block navbar %}
+    <!--添加编辑栏-->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle active" href="#" id="Edit" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Card
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="Edit">
+        <li><a class="dropdown-item" href="#">Append</a></li>
+        <li><a class="dropdown-item" href="#">Add Tag</a></li>
+      </ul>
+    </li>
+
+{% endblock %}
+{% block content %}
+        {% if messages %}
+    <div class="mt-1">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ message|safe }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button></div>
+    {% endfor %}
+    </div>
+    {% endif %}
+<!--编辑单词表单-->
+
+    <h5 class="offcanvas-title" id="EditCardLabel">编辑单词</h5>
+
+    <form  id = 'form1' class="align-items-center col-12 " method="post" action="{% url 'flashcards:word_add'%}">
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput0" placeholder="" name="group" >
+    <label for="floatingInput0">group</label>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+    <input type="text" class="form-control" id="floatingInput1" placeholder="" name="question" >
+    <label for="floatingInput1">question</label>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput2" placeholder="" name="answer" >
+    <label for="floatingInput2">answer</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <textarea type="text" class="form-control" id="floatingInput3" placeholder="" name="example" style="height: 130px"></textarea>
+    <label for="floatingInput3">example</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <textarea type="text" class="form-control" id="floatingInput4" placeholder="" name="translation" ></textarea>
+    <label for="floatingInput4">translation</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput5" placeholder="" name="extra">
+    <label for="floatingInput5">extra</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput6" placeholder="" name="tag">
+    <label for="floatingInput6">Add Tag</label>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Submit!</button>
+
+    {% csrf_token %}
+
+    </form>
+
+{% endblock %}

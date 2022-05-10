@@ -1,0 +1,42 @@
+{% extends "flashcards/card_base.html" %}
+{% load static %}
+{% load flashcards_tags %}
+
+{% block progressbar %}
+    <!-- 进度条 -->
+<div class="progress mt-2">
+<div style="width: {{ percentage }}%" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow='{{ percentage }}' aria-valuemin="0" aria-valuemax="100">{{ percentage }}%</div>
+</div>
+{% endblock %}
+{% block deletetags %}
+    {% url 'flashcards:word_delete_tags' object.id tag.id  1%}
+{% endblock %}
+{% block footer %}
+    <!-- 难易选项 -->
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <button type="button" class="btn btn-secondary" onClick="location.href='{% url "flashcards:undo_list" wordlist_id progress%}'">UNDO</button>
+        <button type="button" class="btn btn-danger" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 4%}'">FORGET</button>
+        <button type="button" class="btn btn-warning" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 3%}'">DIFF</button>
+        <button type="button" class="btn btn-info" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 2%}'">MID</button>
+        <button type="button" class="btn btn-success" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 1%}'">EASY</button>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    //处理例句和扩展为空
+    var example=document.getElementById("example");
+    var extra=document.getElementById("extra");
+
+    if(document.getElementById("example_button").innerText===""){
+        example.style.display="none";
+    }
+    if(document.getElementById("extra_button").innerText===""){
+        extra.style.display="none";
+    }
+    //音频
+    const audio = document.getElementById("audio");
+    function play(){audio.play();}
+
+
+{% endblock %}

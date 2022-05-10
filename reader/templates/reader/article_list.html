@@ -1,0 +1,84 @@
+{% extends "reader/base.html" %}
+{% load static %}
+
+{% block title %}Reader{% endblock %}
+
+
+{% block Reader %}active{% endblock %}
+
+{% block content %}
+    <div class="mt-2">
+    </div>
+
+    <div class="row justify-content-center">
+        {% for article in articles %}
+
+            <div class="card col-md-1 m-2 col-lg-3 placeholder-glow" aria-hidden="true" >
+                {% if article.top_image_url != 'none' %}
+                    <img src="{{ article.top_image_url }}" class="card-img-top placeholder" alt="..." onclick="location.href='{% url 'reader:article_detailview' article.id%}'">
+
+                {% endif %}
+                <div class="card-body">
+                    <a class="card-title h5 "
+                       href="{% url 'reader:article_detailview' article.id %}">{{ article.title| truncatewords:10 }}</a>
+                    <p class="card-text ">{{ article.content | truncatewords:20 }}</p>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+    <nav class="mt-2" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if articles.has_previous %}{% else %}disabled{% endif %}">
+                <a class="page-link" href="?page={% if articles.has_previous %}{{ articles.previous_page_number }}{% else %}{{ articles.number }}{% endif %}">Previous</a>
+            </li>
+            {% for page_num in articles.paginator.page_range %}
+                <li class="page-item {% if  articles.number  == page_num %}disabled{% endif %}"><a class="page-link" href="?page={{ page_num }}" >{{ page_num }}</a></li>
+            {% endfor %}
+            <li class="page-item {% if articles.has_next %}{% else %}disabled{% endif %}" >
+                <a class="page-link " href="?page={% if articles.has_next %}{{ articles.next_page_number }}{% else %}{{ articles.number }}{% endif %}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+{% endblock %}
+
+{% block domready %}
+    //图片加载
+var t_img; // 定时器
+var isLoad = true; // 控制变量
+
+// 判断图片加载状况，加载完成后回调
+isImgLoad(function(){
+    // 加载完成的回调函数
+    $('img').removeClass('placeholder')
+});
+
+// 判断图片加载的函数
+function isImgLoad(callback){
+    // 注意我的图片类名都是cover，因为我只需要处理cover。其它图片可以不管。
+    // 查找所有封面图，迭代处理
+    $('img').each(function(){
+        // 找到为0就将isLoad设为false，并退出each
+        if(this.height === 0){
+            isLoad = false;
+            return false;
+        }
+
+    });
+    // 为true，没有发现为0的。加载完毕
+    if(isLoad){
+        clearTimeout(t_img); // 清除定时器
+        // 回调函数
+        callback();
+    // 为false，因为找到了没有加载完成的图，将调用定时器递归
+    }else{
+        isLoad = true;
+        t_img = setTimeout(function(){
+            isImgLoad(callback); // 递归扫描
+        },500); // 我这里设置的是500毫秒就扫描一次，可以自己调整
+    }
+}
+{% endblock %}
+

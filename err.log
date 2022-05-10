@@ -1,0 +1,154 @@
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect("card_detailview", 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'card_detailview' not found. 'card_detailview' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98812
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect("next", 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'next' not found. 'next' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98759
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect("card_detail", 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'card_detail' not found. 'card_detail' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98746
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect("card_detailview", 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'card_detailview' not found. 'card_detailview' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98819
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect(card_detailview, 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'flashcards.views.card_detailview' not found. 'flashcards.views.card_detailview' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98497
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect('card_detail', 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'card_detail' not found. 'card_detail' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98878
+Internal Server Error: /flashcards/next/
+Traceback (most recent call last):
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\contrib\auth\decorators.py", line 21, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "E:\All Files\Programmaing\Suki\flashcards\views.py", line 104, in nextcardview
+    return redirect('card_detailview', 43191)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 41, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\shortcuts.py", line 131, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\base.py", line 87, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "E:\ANACONDA\envs\anki\lib\site-packages\django\urls\resolvers.py", line 677, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'card_detailview' not found. 'card_detailview' is not a valid view function or pattern name.
+"GET /flashcards/next/ HTTP/1.1" 500 98825

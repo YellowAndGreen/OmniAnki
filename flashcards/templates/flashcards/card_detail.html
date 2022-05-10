@@ -1,0 +1,57 @@
+{% extends "flashcards/card_base.html" %}
+{% load static %}
+{% load flashcards_tags %}
+
+{% block deletetags %}
+    {% url 'flashcards:word_delete_tags' object.id tag.id  0%}
+{% endblock %}
+{% block footer %}
+    <!-- 难易选项 -->
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <button type="button" class="btn btn-secondary" onClick=undo()>UNDO</button>
+        <button type="button" class="btn btn-danger" onClick="location.href='{% url "flashcards:recite" object.id 4%}'">FORGET</button>
+        <button type="button" class="btn btn-warning" onClick="location.href='{% url "flashcards:recite" object.id 3%}'">DIFF</button>
+        <button type="button" class="btn btn-info" onClick="location.href='{% url "flashcards:recite" object.id 2%}'">MID</button>
+        <button type="button" class="btn btn-success" onClick="location.href='{% url "flashcards:recite" object.id 1%}'">EASY</button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    //处理例句和扩展为空
+    var example=document.getElementById("example");
+    var extra=document.getElementById("extra");
+
+    if(document.getElementById("example_button").innerText===""){
+        example.style.display="none";
+    }
+    if(document.getElementById("extra_button").innerText===""){
+        extra.style.display="none";
+    }
+    //音频
+    const audio = document.getElementById("audio");
+    function play(){audio.play();}
+
+    //将本次卡片id存入session
+    var id = JSON.parse(window.localStorage.getItem("id"));
+    //若id不存在则初始化
+    if(id==null){
+        id=[];
+    }
+    id.push({{ object.id }});
+    //长度不超过10
+    if(id.length==11){
+        id.push({{ object.id }});
+        id.shift();
+    }
+    window.localStorage.setItem("id",JSON.stringify(id));
+    //回退按钮点击事件
+
+    function undo(){
+        to = window.location.href.split('flashcards')[0]+'flashcards/undo/'+id[id.length-2];
+        // 删除此次和上次的id，上次的id会自动加上
+        id.pop();
+        id.pop();
+        window.localStorage.setItem("id",JSON.stringify(id));
+        location.href=to;
+    }
+{% endblock %}

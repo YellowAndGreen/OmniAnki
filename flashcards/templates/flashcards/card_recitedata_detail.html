@@ -1,0 +1,10 @@
+{% extends "flashcards/base.html" %}
+{% load static %}
+
+{% block content %}
+    {% for data in all_recitedata %}
+        {{ data.date }} - {{ data.rank }} - {{ data.params }}
+        <br>
+    {% endfor %}
+{% endblock %}
+

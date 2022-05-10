@@ -1,0 +1,184 @@
+{% extends "flashcards/base.html" %}
+{% load static %}
+{% load flashcards_tags %}
+{% block title %}Anki{% endblock %}
+{% block head %}
+<script src="{% static "echarts.js" %}"></script>
+        <style>
+        a{
+            text-decoration: none;
+        }
+        #red{
+            color: red;
+        }
+        #id_query{
+        margin-top: 2%;}
+    </style>
+{% endblock %}
+{% block Anki %} active{% endblock %}
+{% block navbar %}
+    <li class="nav-item">
+        <a class="p-2 nav-link{% block Dict %}{% endblock %}" href={% url 'reader:article_list' %}>Reader</a>
+    </li>
+{% endblock %}
+{% block content %}
+    {% if messages %}
+    <div class="mt-1">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ message|safe }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button></div>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <h6 class="lead h6 mt-2">Hello,{{ request.user }}
+        <span class="badge rounded-pill bg-primary" onClick="location.href='{% url 'account:logout' %}'">Logout</span>
+        <span class="badge rounded-pill bg-primary" onClick="location.href='{% url 'flashcards:settings_view' %}'">Settings</span>
+    </h6>
+    <h6 class="lead h6">当前词库有{{ len }}个单词，{{ lenlist }}个单词列表
+    <a class="btn btn-outline-primary btn-sm" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+  创建单词列表
+</a>
+    </h6>
+<!--创建单词列表表单-->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">创建单词列表</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <h6 class="lead h6">以难度创建</h6>
+        <form  id = 'form1' class="align-items-center col-12 " method="get" action="{% url 'flashcards:create_wordlist_by_diff' %}">
+
+        <div class="form-floating mb-3 mt-3">
+        <input type="text" class="form-control" id="floatingInput" placeholder="list" name="query">
+        <label for="floatingInput">列表名：</label>
+        </div>
+
+        {% csrf_token %}
+
+        </form>
+    </div>
+    <div>
+        <h6 class="lead h6">以标签创建</h6>
+        <form  id = 'form2' class="align-items-center col-12 " method="get" action="{% url 'flashcards:create_wordlist_by_tag' %}">
+
+    <div class="form-floating mb-3">
+
+      <select class="form-select" id="tagfloatingSelect" aria-label="Floating label select example" name="tag">
+
+          {% for tag in tags %}
+              <option value="{{ tag }}" name="{{ tag }}">{{ tag }}</option>
+          {% endfor %}
+
+      </select>
+      <label for="tagfloatingSelect">请选择标签</label>
+    </div>
+     <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="floatingInput2" placeholder="list" name="query">
+      <label for="floatingInput2">列表名：</label>
+    </div>
+
+{% csrf_token %}
+
+</form>
+    </div>
+  </div>
+</div>
+<!--创建单词列表表单结束-->
+    <div class="container-fluid">
+<ol class="list-group list-group-numbered">
+
+   {% for wordlist in wordlists %}
+       {% if wordlist.name == "due" %}
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto" >
+                <div class="fw-bold"><a class='link' href="{% if wordlist.progress != wordlist.len_list %}{% url 'flashcards:recite_wordlist' wordlist.id wordlist.progress 0 %}{% else %}{% url 'flashcards:recite_wordlist' wordlist.id 0 0 %}{% endif %}">{{ wordlist.name }}</a>
+                <span class="badge rounded-pill bg-primary">{{ wordlist.progress }}/{{ wordlist.len_list }}</span>
+                </div>
+            </div>
+
+          </li>
+       {% endif %}
+
+    {% endfor %}
+   {% for wordlist in wordlists %}
+       {% if wordlist.name != "due" %}
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto" >
+                <div class="fw-bold"><a class='link' href="{% if wordlist.progress != wordlist.len_list %}{% url 'flashcards:recite_wordlist' wordlist.id wordlist.progress 0 %}{% else %}{% url 'flashcards:recite_wordlist' wordlist.id 0 0 %}{% endif %}">{{ wordlist.name }}</a>
+                <span class="badge rounded-pill bg-primary">{{ wordlist.progress }}/{{ wordlist.len_list }}</span>
+                <span class="badge rounded-pill bg-danger" onClick="location.href='{% url 'flashcards:delete_wordlist' wordlist.id %}'">Delete</span>
+                </div>
+            </div>
+          </li>
+       {% endif %}
+
+    {% endfor %}
+</ol>
+    </div>
+
+
+
+    <div class="container">
+
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div id="main2" style="width: 100%;height:400px;" ></div>
+    </div>
+</div>
+
+    </div>
+
+
+{% endblock %}
+{% block script %}
+
+// 图表
+
+
+var chartDom = document.getElementById('main2');
+var myChart = echarts.init(chartDom);
+var option;
+var type = {"1":'Easy',"2":'Mid',"3":'Diff',"4":'Forget'};
+option = {
+    title: {
+    left:'center',
+    text: 'ReciteData',
+    textStyle: {
+      color: '#235894'
+    }
+  },
+  angleAxis: {
+    type: 'category',
+    data: ['6 day', '5 day', '4 day', '3 day', '2 day', '1 day', 'Today']
+  },
+  radiusAxis: {},
+  polar: {},
+  series: [
+
+    {% for data in recitedata %}
+            {
+      type: 'bar',
+      data: {{ data }},
+      coordinateSystem: 'polar',
+      name: type['{{ forloop.counter }}'],
+      stack: 'a',
+      emphasis: {
+        focus: 'series'
+      }
+    },
+    {% endfor %}
+
+  ],
+  legend: {
+    show: true,
+    data: ['Easy', 'Mid', 'Diff','Forget'],
+    top: 'bottom',
+  }
+};
+
+option && myChart.setOption(option);
+{% endblock %}

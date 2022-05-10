@@ -1,0 +1,488 @@
+{% load static %}
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Anki{% endblock %}</title>
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link href="{% static "bootstrap.css" %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{%static '/img/favicon.ico' %}" />
+    {% block head %}{% endblock %}
+    <style>
+        @font-face { font-family: _Gurmukhi MN; src: url('{% static '_Gurmukhi MN.ttc' %}'); }
+        body{
+            font-family: _Gurmukhi MN, serif;
+        }
+                .link {
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .word.accordion-button::after {
+            display: none;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        #Anki {
+            display: none;
+        }
+
+        button {
+          -webkit-user-select: text;  /* Chrome all / Safari all */
+          -moz-user-select: text;     /* Firefox all */
+          -ms-user-select: text;      /* IE 10+ */
+          user-select: text;
+        }
+
+        #audio_img {
+            width:17px;
+            height:17px;
+        }
+
+        #audio_button {
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- 导航栏 -->
+    <header class="p-2 border-bottom m-0">
+    <div class="container-fluid">
+      <div class="p-0 d-flex flex-nowrap align-items-center">
+        <a href="{% url "flashcards:dashboard" %}" class="d-flex align-items-center mb-0 mb-lg-0 text-dark text-decoration-none">
+          <img src="{% static '/img/fuyou.png' %}" class="img-fluid" height="50px" width="50px" alt="fail to load">
+        </a>
+
+        <ul class="nav nav-tabs d-flex flex-nowrap">
+          <li class="nav-item" id="Anki">
+            <a class="p-2 nav-link {% block Anki %}{% endblock %}"  href="{% url "flashcards:dashboard" %}" >Anki</a>
+          </li>
+          <li class="nav-item ">
+            <a class="p-2 nav-link {% block Recite %}{% endblock %}" href={% url 'flashcards:next'%}>Recite</a>
+          </li>
+        <li class="nav-item dropdown">
+          <a {% block Search %}{% endblock %} class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Search
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="{% url 'flashcards:search'%}">Search</a></li>
+            <li><a class="dropdown-item" href="{% url 'flashcards:websearch'%}">WebSearch</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+          <li class="nav-item">
+            <a class="p-2 nav-link{% block Dict %}{% endblock %}" href={% url 'flashcards:dict'%}  >Dict</a>
+          </li>
+            <li class="nav-item">
+                <a class="p-2 nav-link {% block Reader %}{% endblock %}" href={% url 'reader:article_list' %}>Reader</a>
+            </li>
+        {% block navbar %}{% endblock %}
+        </ul>
+
+        </div>
+
+      </div>
+
+  </header>
+    <div class="container-fluid" id="content" >
+        <!-- 单词添加成功弹出窗 -->
+        <div class="mt-2" id="word_add_info" style="display: none">
+            <div class="alert alert-success alert-dismissible" role="alert" id="word_add_text">添加成功
+                <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+        </div>
+      {% block content %}
+      {% endblock %}
+
+        <!-- 单词查询弹出窗 -->
+        <div class="position-fixed top-0 start-50 translate-middle-x col-10 toast-window"
+             style="z-index: 11; height: 90%;display: none">
+            <div id="liveToast" class="toast col-12 p-3" data-bs-autohide=false role="alert" aria-live="assertive"
+                 aria-atomic="true" style="width: 100%;height: 100%;">
+                <div class="toast-header">
+
+                    <strong class="me-auto query_word">剑桥高阶 <span class="ms-2" id = 'rank'></span></strong>
+                    <div id="audio_button">
+                        <strong id="audio_text"></strong>
+                        <img id="audio_img" alt="..." src="{% static '/img/sound.png' %}">
+                    </div>
+                    <div class="ms-auto">
+                    <a class="me-2" id="SearchWordBank" target="_blank">查词库</a>
+                    <a class="" href="#EditCard" data-bs-toggle="offcanvas" role="button"
+                   aria-controls="EditCard" id="AddWordButton">添加单词</a>
+                    </div>
+                    <button type="button" class="btn-close toast-window-close" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
+                </div>
+                <div class="toast-body" style="height: 90%;overflow: auto">
+
+                    <div class=" query_word_result "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--编辑单词表单-->
+    <div class="offcanvas offcanvas-start " tabindex="-1" id="EditCard" aria-labelledby="EditCardLabel" style="width:50%">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="EditCardLabel">编辑单词</h5>
+
+            <button type="button" class="btn-close text-reset" id="close_add_word" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id='form1' class="align-items-center col-12 ">
+                <div class="form-floating mb-3 mt-3">
+
+                    <input type="text" class="form-control" id="floatingInput0" placeholder="" name="group"
+                           value="">
+                    <label for="floatingInput0">group</label>
+                </div>
+                <div class="form-floating mb-1 mt-3">
+                    <input type="text" class="form-control" id="floatingInput1" placeholder="" name="question"
+                           value="">
+                    <label for="floatingInput1">question</label>
+                </div>
+                <div>
+                    <select class="form-select-sm mt-0 mb-2 " id="select_word_attr" aria-label="Default select example">
+                        <option selected>v. </option>
+                        <option selected>n. </option>
+                        <option selected>adj. </option>
+                        <option selected>adv. </option>
+                    </select>
+                    <select class="form-select-sm mt-2 mb-2 " id="select_word_meaning"
+                            aria-label="Default select example">
+                        <option selected>选择释义</option>
+                    </select>
+                    <button type="submit" class="btn-sm btn-outline-primary" id="find_example">获取释义</button>
+                    <button type="submit" class="btn-sm btn-outline-primary" id="insert_attr_meaning">填入</button>
+                </div>
+                <div class="form-floating mb-3 mt-1">
+
+                    <textarea type="text" class="form-control" id="floatingInput2" placeholder="" name="answer"></textarea>
+                    <label for="floatingInput2">answer</label>
+                </div>
+
+                <div class="form-floating mb-3 mt-3">
+
+                    <textarea type="text" class="form-control" id="floatingInput3" placeholder="" name="example" style="height: 150px"></textarea>
+                    <label for="floatingInput3">example</label>
+                </div>
+
+                <div class="form-floating mb-3 mt-3">
+
+                    <textarea type="text" class="form-control" id="floatingInput4" placeholder="" name="translation" style="height: 150px"></textarea>
+                    <label for="floatingInput4">translation</label>
+                </div>
+
+
+
+                <button  class="btn btn-outline-primary" id="word_add_submit">Submit!</button>
+
+                {% csrf_token %}
+                <div class="form-floating mb-3 mt-3">
+
+                    <input type="text" class="form-control" id="floatingInput5" placeholder="" name="extra"
+                           value="">
+                    <label for="floatingInput5">extra</label>
+                </div>
+
+                <div class="form-floating mb-3 mt-3">
+
+                    <input type="text" class="form-control" id="floatingInput6" placeholder="" name="tag">
+                    <label for="floatingInput6">Add Tag</label>
+                </div>
+            </div>
+            <select class="form-select mt-2 mb-2" id="example_select" aria-label="Default select example">
+                <option selected>选择例句</option>
+            </select>
+
+            <button type="submit" class="btn btn-outline-primary" id="insert_example">填入</button>
+
+        </div>
+    </div>
+    <!-- 音频 -->
+    <audio autoplay id="audio"></audio>
+    <!-- 底部栏 -->
+    <div class="container-fluid" id="footer">
+    <footer class="container-fluid text-center" >
+      {% block footer %}
+      {% endblock %}
+    </footer>
+    </div>
+    <script src="{% static "popper.min.js" %}"></script>
+    <script src="{% static "bootstrap.js" %}"></script>
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'js.cookie.min.js' %}"></script>
+    <script src="{% static 'crypto-js.js' %}"></script>
+
+  <script>{% block script %}{% endblock %}
+    var csrftoken = Cookies.get('csrftoken');
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    $(document).ready(function(){
+//字典及弹窗
+var toastTrigger = document.getElementById('liveToastBtn')
+var toastLiveExample = document.getElementById('liveToast')
+var exampleInText = ''
+var data_query_word
+
+
+function getWord(e){
+  var word = window.getSelection?    window.getSelection():    document.selection.createRange().text
+  if (word.toString()!=="") {
+    //若选中的不是英文则结束函数
+    //在单词添加输入框内选中也结束函数
+    if (word.toString().match('[\u4e00-\u9fa5]') !== null||e.target.nodeName === 'INPUT'||e.target.nodeName === 'TEXTAREA') {
+        return
+    }
+    /*
+    word.getRangeAt(0).commonAncestorContainer.textContent获取点击块的文本
+    以.分割，通过filter函数找到有对应词的句子，最后加上.
+     */
+    exampleInText = word.getRangeAt(0).commonAncestorContainer.textContent.split(/[.;]/).filter((ele)=>{return ele.indexOf(word.toString())>=0})+'.'
+
+
+    $.post('{% url "flashcards:dict_query" %}',
+    {
+      query_word: word.toString()
+    },
+    function(data){
+      $(".query_word_result").html(data["html_result"])
+      var toast = new bootstrap.Toast(toastLiveExample)
+      toast.show()
+      $(".toast-window").css("display",'inline')
+      data_query_word = data["query_word"]
+      $("#floatingInput1").val(data_query_word)
+      $('#audio_text').text(data_query_word)
+      window.getSelection().empty();
+      //词汇rank值
+      $("#rank").text("RANK:"+data["rank"])
+      //查词库的链接
+      $('#SearchWordBank').attr('href',"{% url "flashcards:search"%}" + "?query=" + data_query_word)
+    }
+  );
+    $('#floatingInput3').val(exampleInText)
+
+    //在此处可能会占用更多资源，在点开添加单词时再使用
+    //translate(exampleInText)
+  }
+
+}
+    // 防止阻挡到其他元素
+$(".toast-window-close").click(function(){
+    $(".toast-window").css("display",'none')
+})
+
+
+$("body").on("click",function(e){
+    getWord(e);
+});
+
+$("body").on('click',function (e) {
+    // 在弹出框之外点击删除弹出框，添加单词以及退出添加不删除
+    if($(".toast-window").css("display") !== 'none'&&e.target.className!==' query_word_result '
+        &&e.target.className!=='toast-body'&&e.target.className!==''&&e.target.className!=='ms-auto'
+        &&e.target.className!=='offcanvas-backdrop fade' && e.target.nodeName !== 'BUTTON'
+        && e.target.nodeName !== 'INPUT' && e.target.nodeName !== 'SELECT' && e.target.nodeName !== 'TEXTAREA'
+    ){
+        $(".toast-window").css("display",'none');
+        //console.log(e.target.className)
+    }
+})
+
+$("body").on("touchstart",function(e){
+    setTimeout(function (){
+        getWord(e);
+    }, 1000);
+    window.getSelection().empty();
+
+});
+
+
+//添加表单
+function find_example_and_trans() {
+    // 查询的文本
+    let dictHtml = $('.query_word_result').html()
+    // 过滤出例句和翻译
+    let raw_examples = dictHtml.match(/<font color="#008080">.*?<\/font><\/div>/g)
+    // 遍历例句放入两个列表中
+    let examples = []
+    let translations = []
+    let meanings = []
+    raw_examples.map((raw_example)=>{
+        let example_and_tran = raw_example.replace(/(<.*?>|<\/.*?>)/g, "")
+        // 分割英文和中文，以中文第一个字切割
+        let first_chinese = example_and_tran.match(/[\u4e00-\u9fa5]/).index
+        let example = example_and_tran.slice(0,first_chinese)
+        let translation = example_and_tran.slice(first_chinese,)
+        examples.push(example)
+        translations.push(translation)
+    })
+    // 全局匹配不能使用子表达式，所以只有去除外边的部分
+    meanings = dictHtml.match(/<font style="color:navy;margin-left:12pt;" ?>(.*?)<\/font>/g).map((translation)=>translation.replace(/(<.*?>|<\/.*?>)/g, ""))
+    return [examples,translations,meanings]
+}
+let result
+function getExample(){
+    results = find_example_and_trans()
+    //删除之前的选项
+    $('#select_word_meaning option').remove()
+    $('#example_select option').remove()
+    //文章中的例句
+    if (exampleInText !== '') {
+        $('#example_select').append('<option value=' + String(-1) + '>' + exampleInText + '</option>')
+    }
+    //字典例句
+    for (let index in results[0]) {
+        $('#example_select').append('<option value='+String(index)+'>'+results[0][index]+'</option>')
+    }
+
+    for (let index in results[2]) {
+        $('#select_word_meaning').append('<option value='+String(index)+'>'+results[2][index]+'</option>')
+    }
+}
+
+function insertExample() {
+    var result_index = $('#example_select option:selected').val()
+    if (result_index >= 0) {
+        $('#floatingInput3').val(results[0][result_index])
+        $('#floatingInput4').val(results[1][result_index])
+    }
+    else {
+        $('#floatingInput3').val(exampleInText)
+        translate(exampleInText)
+    }
+}
+function insertMeaning() {
+    let meaning = $('#select_word_meaning option:selected').text()
+    let attr = $('#select_word_attr option:selected').text()
+    //此处应为追加，而不是覆盖
+    let current_meaning = $('#floatingInput2').val()
+    //若存在释义，则先换行
+    if (current_meaning!=='') {
+        // console.log(current_meaning + '<br>' + attr +meaning)
+        $('#floatingInput2').val(current_meaning + '\n' + attr +meaning)
+    }
+    else {
+        $('#floatingInput2').val(attr+meaning)
+    }
+}
+
+$('#insert_example').on("click",function(){
+    insertExample()
+});
+//插入词义
+$('#insert_attr_meaning').on('click',function () {
+    insertMeaning()
+})
+// 提交添加单词表单
+function addWordForm() {
+    $.post('{% url "flashcards:word_add" %}',
+        {
+            group: $('input[name=group]').val(),
+            question: $('input[name=question]').val(),
+            answer: $('textarea[name=answer]').val(),
+            example: $('textarea[name=example]').val(),
+            translation: $('textarea[name=translation]').val(),
+            extra: $('input[name=extra]').val(),
+            tag: $('input[name=tag]').val(),
+        },
+        function (data) {
+            $("#close_add_word").trigger("click")
+            if (data['status']==='ok'){
+                $("#word_add_info").css('display','block')
+            }
+            else {
+                $('#word_add_text').text('添加失败')
+            }
+            $('#floatingInput2').val('')
+        }
+    );
+}
+$('#word_add_submit').on("click",function(){
+    addWordForm()
+});
+
+$('#AddWordButton').on('click',function () {
+    getExample()
+    translate(exampleInText)
+})
+
+
+//获取划词句子翻译
+var appKey = '3e1685d354478356';
+var key = '6SdjUOzdnN3QWZAQ4vS5nFTnJdO168jr';//注意：暴露appSecret，有被盗用造成损失的风险
+
+// 多个query可以用\n连接  如 query='apple\norange\nbanana\npear'
+var from = 'en';
+var to = 'zh-CHS';
+
+// 词表id不能相同，时间不能相同
+var vocabId =  1;
+
+function translate(query) {
+    var salt = (new Date).getTime();
+    var curtime = Math.round(new Date().getTime()/1000);
+    var str1 = appKey + truncate(query) + salt + curtime + key;
+    var sign = CryptoJS.SHA256(str1).toString(CryptoJS.enc.Hex);
+    var vocabIdStr = String(vocabId)
+    vocabId++
+    $.ajax({
+    url: 'https://openapi.youdao.com/api',
+    type: 'post',
+    dataType: 'jsonp',
+    data: {
+        q: query,
+        appKey: appKey,
+        salt: salt,
+        from: from,
+        to: to,
+        sign: sign,
+        signType: "v3",
+        curtime: curtime,
+        vocabId: vocabIdStr,
+    },
+    success: function (data) {
+        console.log(data);
+        $('#floatingInput4').val(data['translation'][0])
+    }
+});
+}
+function truncate(q){
+    var len = q.length;
+    if(len<=20) return q;
+    return q.substring(0, 10) + len + q.substring(len-10, len);
+}
+
+
+$('#audio_button').on('click',function () {
+    $('#audio').attr('src','http://dict.youdao.com/dictvoice?audio='+data_query_word)
+    const audio = document.getElementById("audio")
+    audio.play()
+})
+{% block domready %}
+{% endblock %}
+    });
+  </script>
+  </body>
+</html>

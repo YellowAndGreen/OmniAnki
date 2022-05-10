@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+    <title>1</title></head>
+<body>
+<ul>
+
+{% for card in object_list %}
+    <li>{{ card.group }} - {{ card.question |safe}} - {{ card.pk }}</li>
+{#{% empty %}#}
+{#    <li>No articles yet.</li>#}
+{% endfor %}
+</ul>
+
+</body>
+</html>

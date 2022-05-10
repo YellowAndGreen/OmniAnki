@@ -1,0 +1,108 @@
+{% load static %}
+{% load flashcards_tags %}
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Anki{% endblock %}</title>
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link href="{% static "bootstrap.css" %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{%static '/img/favicon.ico' %}" />
+    {% block head %}{% endblock %}
+    <style>
+        @font-face { font-family: _Gurmukhi MN; src: url('{% static '_Gurmukhi MN.ttc' %}'); }
+        body{
+            font-family: _Gurmukhi MN, serif;
+        }
+    </style>
+  </head>
+  <body>
+    <!-- 导航栏 -->
+    <header class="p-2 border-bottom m-0">
+    <div class="container-fluid">
+      <div class="p-0 d-flex flex-nowrap align-items-center">
+        <a href="{% url "flashcards:dashboard" %}" class="d-flex align-items-center mb-0 mb-lg-0 text-dark text-decoration-none">
+          <img src="{% static '/img/fuyou.png' %}" class="img-fluid" height="50px" width="50px" alt="fail to load">
+        </a>
+
+        <ul class="nav nav-tabs d-flex flex-nowrap">
+          <li class="nav-item" id="Anki">
+            <a class="p-2 nav-link {% block Anki %}{% endblock %}"  href="{% url "flashcards:dashboard" %}" >Anki</a>
+          </li>
+          <li class="nav-item ">
+            <a class="p-2 nav-link {% block Recite %}{% endblock %}" href={% url 'flashcards:next'%}>Recite</a>
+          </li>
+        <li class="nav-item dropdown">
+          <a {% block Search %}{% endblock %} class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Search
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <li><a class="dropdown-item" href="{% url 'flashcards:search'%}">Search</a></li>
+            <li><a class="dropdown-item" href="{% url 'flashcards:websearch'%}">WebSearch</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+          <li class="nav-item">
+            <a class="p-2 nav-link{% block Dict %}{% endblock %}" href={% url 'flashcards:dict'%}  >Dict</a>
+          </li>
+        {% block navbar %}{% endblock %}
+        </ul>
+
+        </div>
+
+      </div>
+
+  </header>
+    <div class="container-fluid" id="content" >
+        {% if messages %}
+            <div class="mt-1">
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {{ message|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+      {% block content %}
+
+      {% endblock %}
+    </div>
+    <!-- 底部栏 -->
+    <div class="container-fluid" id="footer">
+    <footer class="container-fluid text-center" >
+      {% block footer %}
+      {% endblock %}
+    </footer>
+    </div>
+    <script src="{% static "popper.min.js" %}"></script>
+    <script src="{% static "bootstrap.js" %}"></script>
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script src="{% static 'js.cookie.min.js' %}"></script>
+
+
+  <script>{% block script %}{% endblock %}
+    var csrftoken = Cookies.get('csrftoken');
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    $(document).ready(function(){
+      {% block domready %}
+      {% endblock %}
+    });
+  </script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "flashcards/base.html" %}
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="mt-3">
+    <form method="post" action="{% url 'flashcards:settings_view' %}">
+        <div class="form-check form-switch">
+            {% csrf_token %}
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                   name="random_example" {% if random_example %}checked{% endif %}>
+            <label class="form-check-label" for="flexSwitchCheckDefault">随机例句</label>
+            <input class="" type="text" name="path" style="display: none" value="{{ request.path }}">
+            <button type="submit" class="btn btn-outline-primary">Submit!</button>
+        </div>
+    </form>
+</div>
+<hr>
+
+<div>
+    <form method="post" action="{% url 'flashcards:export_card_as_txt' %}">
+        {% csrf_token %}
+        <label for="customRange" class="form-label">导出为txt<span id="num_export"></span></label>
+        <input type="range" class="form-range" min="1" max="50" step="1" id="customRange" name="num">
+        <button type="submit" class="btn btn-outline-primary">Submit!</button>
+    </form>
+</div>
+<hr>
+
+<div>
+    <form method="post" action="{% url 'reader:update_article' %}">
+        {% csrf_token %}
+        <label for="floatingInput0">域名：</label>
+        <select class="form-select " id="select_news_url" aria-label="Default select example">
+            <option selected>https://thenextweb.com/</option>
+            <option>https://www.cnbc.com/</option>
+            <option>https://www.cnn.com/</option>
+            <option>https://www.chinadaily.com.cn/</option>
+            <option>https://www.wired.com/</option>
+        </select>
+        <input type="text" class="form-control mt-2" id="floatingInput0" placeholder="" name="url"
+               value="">
+
+        <button class="btn btn-outline-primary mt-2">更新文章</button>
+    </form>
+</div>
+<hr>
+<div>
+    <form method="get" action="{% url 'flashcards:export_db' %}">
+            {% csrf_token %}
+            <h6>导出数据库</h6>
+            <button type="submit" class="btn btn-outline-primary">Submit!</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+    $('.form-range').on("click",function(){
+        $('#num_export').text("，共"+String($('.form-range').val())+"张卡片")
+    });
+    $('#select_news_url').on("click",function(){
+        $('#floatingInput0').val($('#select_news_url option:selected').val())
+    });
+{% endblock %}

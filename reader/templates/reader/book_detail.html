@@ -1,0 +1,88 @@
+{% extends "reader/base.html" %}
+{% load static %}
+
+{% block title %}Books{% endblock %}
+
+{% block head %}
+    <style>
+        body{
+            margin-left: 5% !important;
+            margin-right: 5% !important;
+        }
+        #footer {
+            position: fixed;
+            bottom: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div>
+    {{ book.content |safe}}
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+    <button  class="btn btn-outline-primary" id="getProgress" data-bs-toggle="popover" title="保存成功" data-bs-content="">保存进度!</button>
+    <button  class="btn btn-outline-primary" id="backToProgress" >回溯进度！</button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    progress = 0
+    function saveCurrentProgress(){
+        // 页面的总高度
+        let pageHeight = document.body.scrollHeight || document.documentElement.scrollHeight;
+        // 浏览器视口高度
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        // 可滚动的高度
+        let scrollAvail = pageHeight - windowHeight;
+        // 获取滚动条的高度
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        // console.log(String(scrollTop/scrollAvail))
+        progress = scrollTop/scrollAvail
+        $.post('{% url "reader:book_progress" %}',
+            {
+                progress: progress,
+                book_id: {{ book.id }},
+            },
+            function(data){
+                //alert(String(progress))
+                alert(data['status'])
+            }
+          );
+    }
+    function backToSavedProgress(){
+        // 页面的总高度
+        let pageHeight = document.body.scrollHeight || document.documentElement.scrollHeight;
+        // 浏览器视口高度
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        // 可滚动的高度
+        let scrollAvail = pageHeight - windowHeight;
+        // 获取滚动条的高度
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        console.log(String(progress*scrollAvail))
+        //$('body').scrollTop(progress*scrollAvail)
+        $.post('{% url "reader:book_progress" %}',
+            {
+                book_id: {{ book.id }},
+            },
+            function(data){
+                //alert(data['progress'])
+                $('html,body').animate({scrollTop:data['progress']*scrollAvail}, 800);
+            }
+          );
+        }
+
+
+    $("#getProgress").click(function(){
+        saveCurrentProgress()
+})
+    $("#backToProgress").click(function(){
+        backToSavedProgress()
+})
+
+{% endblock %}

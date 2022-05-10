@@ -1,0 +1,153 @@
+<div id="anki">
+  <!--first block-->
+  
+  <div class="line_02" id="question"><span id="question2">{{《》}}</span></div>
+           
+  <div id="first_block">
+    
+  <div class="front" id="front">{{正面}}</div>
+
+  <div class="frontside" id="frontside">{{背面}}</div>
+    
+  </div>
+  
+  <!--first block-->
+  
+  <!--second moving block-->
+  <div id="second_block">
+    <span id="hidden_block"></span>
+    <span id="moving_block">{{例句}}</span>
+  </div>
+  
+  <!--second moving block-->
+       
+  <!--extended block-->
+  <div id="extended_block">
+    <span class="property1" id="translation">{{扩展}}</span>
+  </div>
+  <!--extended block--> 
+
+</div>
+<!--放置br使得在移动端图标不会重合-->
+<br><br><br>
+<div id="image"></div>
+
+
+
+<script>
+/* 例句和扩展有时为空的情况处理 */
+
+var second_block=document.getElementById("second_block");
+var extended_block=document.getElementById("extended_block");
+var translation=document.getElementById("translation");
+
+if("{{例句}}"==""){
+	second_block.style.display="none";
+	translation.style.display="none";
+}
+/*
+if("{{例句}}"=="" &"{{扩展}}"==""){
+	second_block.style.display="none";
+	extended_block.style.display="none";
+}
+*/
+
+
+
+/* 测试额外的个数并添加 */
+
+var extended_block = document.getElementById("extended_block");
+var ext= "{{扩展2}}";
+var second_block=document.getElementById("second_block");
+function extspliter(str){
+  var group=str.split(/(RELATED\:|SYNONYM\:|ANTONYM\:)/);
+  return group;
+}
+function counter(gr){
+  var a=(gr.length-1)/2;
+  return a;
+}
+var gr=extspliter(ext);
+var double=0;
+if (gr.length!=1) {
+  for (var i = 1; i < gr.length; i++) {
+    var span = document.createElement("span");
+
+    span.innerHTML = gr[i];
+    if (i % 2 == 0) {
+      span.setAttribute("class", "property2");
+    }
+    if (i % 2 != 0) {
+      span.setAttribute("class", "property1");
+    }
+    extended_block.appendChild(span);
+  }
+} else if(ext!=""){
+  var span = document.createElement("span");
+  span.innerHTML=ext;
+  span.setAttribute("class", "property1");
+  extended_block.appendChild(span);
+}
+
+
+/* click to unveil example*/
+var moving_block=document.getElementById("moving_block");
+var hidden_block=document.getElementById("hidden_block");
+
+moving_block.onclick = function() {
+  hidden_block.style.opacity="0";
+  button_adjust_move();
+    }
+
+extended_block.onclick = function() {
+  hidden_block.style.opacity="1";
+  button_adjust_moveback();
+    }
+
+
+/* button animation */
+function button_adjust_move() {
+  var id = setInterval(frame, 15);
+  var heightbegin = second_block.offsetHeight;
+  var heightend = moving_block.offsetHeight;
+  if (heightbegin>heightend){
+    return;
+  }
+  function frame() {
+      if ( heightbegin>= heightend+20){
+          clearInterval(id);
+      } else {
+        heightbegin++;
+        second_block.style.height=heightbegin.toString()+"px";
+      }
+  } 
+}
+
+function button_adjust_moveback() {
+  var id = setInterval(frame, 15);
+  var heightbegin = second_block.offsetHeight;
+  var heightend = initialheight;
+ /* if (heightbegin>heightend){
+    return;
+  }*/
+  function frame() {
+      if ( heightbegin <= 30){
+          clearInterval(id);
+      } else {
+        heightbegin--;
+        second_block.style.height=heightbegin.toString()+"px";}}}
+
+var image=document.getElementById("image");
+var link=document.getElementById("link");
+image.onclick=function(){
+	link.innerHTML="{{《》}}";
+	link.style.fontFamily= "_Bookerly";
+}
+/* 转化正面的词汇为可用 */
+
+var front=document.getElementById("front");
+var word=front.innerHTML;
+document.getElementById("link").setAttribute("href","eudic://dict/"+word.split(" ")[0]); 
+
+
+</script>

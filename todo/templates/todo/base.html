@@ -1,0 +1,39 @@
+{% load static %}
+{% load flashcards_tags %}
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Anki{% endblock %}</title>
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link href="{% static "bootstrap.css" %}" rel="stylesheet">
+    <link rel="shortcut icon" href="{%static '/img/favicon.ico' %}" />
+    {% block head %}{% endblock %}
+    <style>
+        @font-face { font-family: _Gurmukhi MN; src: url('{% static '_Gurmukhi MN.ttc' %}'); }
+        body{
+            font-family: _Gurmukhi MN, serif;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid" id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <!-- 底部栏 -->
+    <div class="container-fluid" id="footer">
+    <footer class="container-fluid text-center" >
+      {% block footer %}
+      {% endblock %}
+    </footer>
+    </div>
+    <script src="{% static "popper.min.js" %}"></script>
+    <script src="{% static "bootstrap.js" %}"></script>
+  <script>{% block script %}{% endblock %}
+
+  </script>
+  </body>
+</html>

@@ -1,0 +1,193 @@
+{% extends "flashcards/base.html" %}
+{% load static %}
+{% load flashcards_tags %}
+{% block title %}Anki Card{% endblock %}
+
+{% block head %}
+    <style>
+    .link{
+        text-decoration: none;
+        font-weight: bold;
+        }
+    .word.accordion-button::after{
+    display: none;}
+    #footer{
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    }
+    #Anki{
+        display: none;
+    }
+    </style>
+{% endblock %}
+{% block Recite %} active{% endblock %}
+
+{% block navbar %}
+    <!--添加编辑栏-->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="Edit" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Card
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="Edit">
+        <li><a class="dropdown-item" href="{% url 'flashcards:word_add_tags' object.id 'marked' wordlist_id %}">Mark!</a></li>
+        <li><a class="dropdown-item " href="#EditCard" data-bs-toggle="offcanvas" role="button" aria-controls="EditCard">Edit</a></li>
+        <li><a class="dropdown-item" href="{% url 'flashcards:word_delete' object.id %}">Delete</a></li>
+        <li><a class="dropdown-item" href="{% url 'flashcards:word_add' %}">Add Word</a></li>
+      </ul>
+    </li>
+<!--编辑单词表单-->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="EditCard" aria-labelledby="EditCardLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="EditCardLabel">编辑单词</h5>
+
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form  id = 'form1' class="align-items-center col-12 " method="post" action="{% url 'flashcards:word_edit' object.id wordlist_id%}">
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput0" placeholder="" name="group" value="{{ object.group|safe }}">
+    <label for="floatingInput0">group</label>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+    <input type="text" class="form-control" id="floatingInput1" placeholder="" name="question" value="{{ object.question|safe }}">
+    <label for="floatingInput1">question</label>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput2" placeholder="" name="answer" value="{{ object.answer|pureword|safe }}">
+    <label for="floatingInput2">answer</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput3" placeholder="" name="example" value="{{ object.example|safe }}">
+    <label for="floatingInput3">example</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput4" placeholder="" name="translation" value="{{ object.translation|safe }}">
+    <label for="floatingInput4">translation</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput5" placeholder="" name="extra" value="{{ object.extra|safe }}">
+    <label for="floatingInput5">extra</label>
+    </div>
+
+    <div class="form-floating mb-3 mt-3">
+
+    <input type="text" class="form-control" id="floatingInput6" placeholder="" name="tag">
+    <label for="floatingInput6">Add Tag</label>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Submit!</button>
+
+    {% csrf_token %}
+
+    </form>
+  </div></div>
+{% endblock %}
+{% block content %}
+    {% if messages %}
+    <div class="mt-1">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ message|safe }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        </button></div>
+    {% endfor %}
+    </div>
+    {% endif %}
+
+        <!-- 卡片正面 -->
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingZero">
+      <button class="accordion-button collapsed word" type="button" data-bs-toggle="collapse" aria-expanded="false">
+        {{ object.group }}
+        <div class="" style="position: fixed;right: 5%">
+        {% if tags %}
+                                {% for tag in tags %}
+              <span class="badge rounded-pill bg-primary position-relative ">{{ tag }}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" onClick="location.href='{% url 'flashcards:word_delete_tags' object.id tag.id wordlist_id %}'">
+    X
+  </span></span>
+
+          {% endfor %}
+        {% endif %}
+        </div>
+      </button>
+    </h2>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed "  type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" onclick="play()">
+          <a class="link" href='{% url 'flashcards:dict' %}?query={{ object.question |pureword |safe}}'>{{ object.question |pureword |safe}}</a>
+      </button>
+
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
+      <div class="accordion-body">{{ object.answer |safe}}</div>
+    </div>
+  </div>
+  <div class="accordion-item" id="example">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button id="example_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+          <div>{{ object.example |safe}}</div>
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" >
+      <div class="accordion-body">{{ object.translation |safe}}</div>
+    </div>
+  </div>
+  <div class="accordion-item" id="extra">
+    <h2 class="accordion-header" id="flush-headingThree">
+      <button  class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="flush-collapseThree">
+        EXTRA
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse  open" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+      <div id="extra_button" class="accordion-body">{{ object.extra |safe}}</div>
+    </div>
+  </div>
+</div>
+
+    <!-- 音频 -->
+    <audio autoplay id="audio" src={{object.question|pureword|youdao}}>ERROR</audio>
+{% endblock %}
+
+{% block footer %}
+    <!-- 难易选项 -->
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <button type="button" class="btn btn-secondary" onClick="location.href='{% url "flashcards:undo_list" wordlist_id progress%}'">UNDO</button>
+        <button type="button" class="btn btn-danger" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 4%}'">FORGET</button>
+        <button type="button" class="btn btn-warning" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 3%}'">DIFF</button>
+        <button type="button" class="btn btn-info" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 2%}'">MID</button>
+        <button type="button" class="btn btn-success" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 1%}'">EASY</button>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    //处理例句和扩展为空
+    var example=document.getElementById("example");
+    var extra=document.getElementById("extra");
+
+    if(document.getElementById("example_button").innerText===""){
+        example.style.display="none";
+    }
+    if(document.getElementById("extra_button").innerText===""){
+        extra.style.display="none";
+    }
+    //音频
+    const audio = document.getElementById("audio");
+    function play(){audio.play();}
+
+
+{% endblock %}
+

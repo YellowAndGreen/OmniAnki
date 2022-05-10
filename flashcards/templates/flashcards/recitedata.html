@@ -1,0 +1,18 @@
+{% load static %}
+{% load flashcards_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anki</title>
+</head>
+<body>
+{% for data in datas %}
+    <li>{{ data.card.group }} - {{ data.card.question | pureword | safe}} - {{ data.card.id }}</li><br>
+
+    {% for recitedata in data.recitedata %}
+        <p>{{ recitedata.date | strftime}}  :  {{ recitedata.rank }}</p>
+        {% endfor %}
+{% endfor %}
+</body>
+</html>
