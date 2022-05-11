@@ -1,4 +1,4 @@
-# Suki - a parody of Anki
+# OmniAnki - a parody of Anki
 A card review tool which has built-in readers to provide an end-to-end language learning experience!
 
 ## **Features:**
