@@ -1,0 +1,34 @@
+version: "3"
+
+networks: # 自定义网络(默认桥接), 不使用links通信
+  anki_network:
+    driver: bridge
+
+services:
+  web:
+#    image: test:2
+#    使用dockerfile构建镜像
+    build:
+      context: .
+      dockerfile: ./docker-env/django/Dockerfile
+    command: uwsgi --ini config/uwsgi.ini  # 容器启动后启动web服务器
+    networks:
+      - anki_network
+    container_name: web
+    expose:
+      - "80"
+
+
+  nginx:
+    image: nginx:stable
+    container_name: nginx
+    ports:
+      - "7777:80"
+    restart: always # always表容器运行发生错误时一直重启
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./flashcards/static:/home/static
+    networks:
+      - anki_network
+    depends_on:
+      - web
