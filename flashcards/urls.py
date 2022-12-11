@@ -41,5 +41,4 @@ urlpatterns = [
     path('export_card_as_txt/', export_card_as_txt, name='export_card_as_txt'),
     path('export_db/', export_db, name='export_db'),
     path('dict_query_get/<slug:query_word>/', dict_query_get, name='dict_query_get'),
-    path('test',CourseEnrollView.as_view())
 ]

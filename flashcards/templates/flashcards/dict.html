@@ -6,97 +6,113 @@
     <link href="{% static "dict/牛津/牛津高阶8简体.css" %}" rel="stylesheet">
 
     <style>
-    #id_query{
-        margin-top: 2%;
-    }
-    a.fayin{
-        display: none;
-    }
+        #id_query {
+            margin-top: 2%;
+        }
+
+        a.fayin {
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block Dict %} active{% endblock %}
 {% block content %}
-        {% if messages %}
-    <div class="mt-1">
-    {% for message in messages %}
-    <div class="alert alert-success alert-dismissible" role="alert">
-        {{ message|safe }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-        </button></div>
-    {% endfor %}
-    </div>
+    {% if messages %}
+        <div class="mt-1">
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    {{ message|safe }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-<div class="d-flex nowrap">
-<form  class="align-items-center col-6 " method="get">
+        <div class="card h-100 shadow mt-2">
+        <div class="card-header align-items-center">
+            Dictionary
+        </div>
+    <div class="card-body">
 
-{{ form.as_p }}
+        <form class="align-items-center" method="get">
+            {{ form.as_p }}
+            {% csrf_token %}
+        </form>
+        {% if html_result %}
+            <div class="align-self-center ms-auto">
+                <a id='addword' class="btn btn-outline-primary" href="#EditCard" data-bs-toggle="offcanvas"
+                   role="button" aria-controls="EditCard">添加到词库</a>
+            </div>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="EditCard" aria-labelledby="EditCardLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="EditCardLabel">添加单词</h5>
 
-{% csrf_token %}
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <form id='form1' class="align-items-center col-12 " method="post"
+                          action="{% url 'flashcards:word_add' %} ">
+                        <div class="form-floating mb-3 mt-3">
 
-</form>
-{% if html_result %}
-    <div class="align-self-center ms-auto">
-    <a id='addword' class="btn btn-outline-primary" href="#EditCard" data-bs-toggle="offcanvas" role="button" aria-controls="EditCard">添加到词库</a>
-    </div>
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="EditCard" aria-labelledby="EditCardLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="EditCardLabel">添加单词</h5>
+                            <input type="text" class="form-control" id="floatingInput0" placeholder="" name="group"
+                                   value="{{ object.group|safe }}">
+                            <label for="floatingInput0">group</label>
+                        </div>
+                        <div class="form-floating mb-3 mt-3">
+                            <input type="text" class="form-control" id="floatingInput1" placeholder="" name="question"
+                                   value="{{ searchvalue }}">
+                            <label for="floatingInput1">question</label>
+                        </div>
+                        <div class="form-floating mb-3 mt-3">
 
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <form  id = 'form1' class="align-items-center col-12 " method="post" action="{% url 'flashcards:word_add'%} ">
-    <div class="form-floating mb-3 mt-3">
+                            <input type="text" class="form-control" id="floatingInput2" placeholder="" name="answer"
+                                   value="{{ object.answer|pureword|safe }}">
+                            <label for="floatingInput2">answer</label>
+                        </div>
 
-    <input type="text" class="form-control" id="floatingInput0" placeholder="" name="group" value="{{ object.group|safe }}">
-    <label for="floatingInput0">group</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
-    <input type="text" class="form-control" id="floatingInput1" placeholder="" name="question" value="{{ searchvalue }}">
-    <label for="floatingInput1">question</label>
-    </div>
-    <div class="form-floating mb-3 mt-3">
+                        <div class="form-floating mb-3 mt-3">
 
-    <input type="text" class="form-control" id="floatingInput2" placeholder="" name="answer" value="{{ object.answer|pureword|safe }}">
-    <label for="floatingInput2">answer</label>
-    </div>
+                            <textarea type="text" class="form-control" id="floatingInput3" placeholder="" name="example"
+                                      style="height: 130px"></textarea>
+                            <label for="floatingInput3">example</label>
+                        </div>
 
-    <div class="form-floating mb-3 mt-3">
+                        <div class="form-floating mb-3 mt-3">
 
-    <textarea type="text" class="form-control" id="floatingInput3" placeholder="" name="example" style="height: 130px"></textarea>
-        <label for="floatingInput3">example</label>
-    </div>
+                            <textarea type="text" class="form-control" id="floatingInput4" placeholder=""
+                                      name="translation" style="height: 130px"></textarea>
+                            <label for="floatingInput4">translation</label>
+                        </div>
 
-    <div class="form-floating mb-3 mt-3">
+                        <div class="form-floating mb-3 mt-3">
 
-    <textarea type="text" class="form-control" id="floatingInput4" placeholder="" name="translation" style="height: 130px"></textarea>
-    <label for="floatingInput4">translation</label>
-    </div>
+                            <input type="text" class="form-control" id="floatingInput5" placeholder="" name="extra"
+                                   value="{{ object.extra|safe }}">
+                            <label for="floatingInput5">extra</label>
+                        </div>
 
-    <div class="form-floating mb-3 mt-3">
+                        <div class="form-floating mb-3 mt-3">
 
-    <input type="text" class="form-control" id="floatingInput5" placeholder="" name="extra" value="{{ object.extra|safe }}">
-    <label for="floatingInput5">extra</label>
-    </div>
+                            <input type="text" class="form-control" id="floatingInput6" placeholder="" name="tag">
+                            <label for="floatingInput6">Add Tag</label>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary">Submit!</button>
 
-    <div class="form-floating mb-3 mt-3">
+                        {% csrf_token %}
 
-    <input type="text" class="form-control" id="floatingInput6" placeholder="" name="tag">
-    <label for="floatingInput6">Add Tag</label>
-    </div>
-    <button type="submit" class="btn btn-outline-primary">Submit!</button>
+                    </form>
+                </div>
+            </div>
 
-    {% csrf_token %}
+        {% endif %}
 
-    </form>
-  </div></div>
-
-{% endif %}
-</div>
     <div class="container-fluid">
 
-    {{ html_result|safe }}
+        {{ html_result|safe }}
     </div>
+    </div>
+
 
 {% endblock %}
 
@@ -115,9 +131,9 @@
     //快捷键alt打开添加单词界面
     var addword = document.getElementById("addword");
     document.onkeydown = function(key){
-        if(key.key == "Alt"){
-            addword.click();
-        }
+    if(key.key == "Alt"){
+    addword.click();
+    }
     }
 
 {% endblock %}

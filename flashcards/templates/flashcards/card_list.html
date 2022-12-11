@@ -13,7 +13,7 @@
 {% endblock %}
 {% block footer %}
     <!-- 难易选项 -->
-    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+    <div class="btn-group btn-group-sm text-center" role="group" aria-label="Basic mixed styles example">
         <button type="button" class="btn btn-secondary" onClick="location.href='{% url "flashcards:undo_list" wordlist_id progress%}'">UNDO</button>
         <button type="button" class="btn btn-danger" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 4%}'">FORGET</button>
         <button type="button" class="btn btn-warning" onClick="location.href='{% url "flashcards:recite_wordlist" wordlist_id progress 3%}'">DIFF</button>
@@ -28,10 +28,10 @@
     var example=document.getElementById("example");
     var extra=document.getElementById("extra");
 
-    if(document.getElementById("example_button").innerText===""){
+    if(document.getElementById("example_button") && document.getElementById("example_button").innerText===""){
         example.style.display="none";
     }
-    if(document.getElementById("extra_button").innerText===""){
+    if(document.getElementById("extra_button") && document.getElementById("extra_button").innerText===""){
         extra.style.display="none";
     }
     //音频

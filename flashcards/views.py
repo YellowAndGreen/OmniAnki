@@ -12,8 +12,6 @@ from django.http import JsonResponse, FileResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from taggit.models import Tag
 
 from flashcards.utils import find_example_from_database
@@ -70,9 +68,19 @@ def index(request):
 # 单张卡片浏览
 def card_detailview(request, card_id):
     # 从缓存中获取当前设置，若无则从数据库读取并存入缓存
-    random_example = request.user.settings.all()[0] if cache.get('random_example') is None else cache.get(
-        'random_example')
-
+    # random_example = request.user.settings.all()[0] if cache.get('random_example') is None else cache.get(
+    #     'random_example')
+    if cache.get('random_example') is None:
+        # 判断该用户是否有setting
+        settings = request.user.settings.all()
+        if len(settings) == 0:
+            add_setting = Settings(user=request.user)
+            add_setting.save()
+            random_example = add_setting
+        else:
+            random_example = request.user.settings.all()[0]
+    else:
+        random_example = cache.get('random_example')
     # 获取card实例
     card = get_object_or_404(Card, id=card_id)
     # 若当前设置为随机例句且是该卡片属于词汇分组
@@ -143,9 +151,9 @@ def card_recitedata_view(request, card_id):
 # 修改到此
 @login_required
 def search(request):
-    cards = []
     cd = {"query": ''}
     form = SearchForm(request.GET)
+    no_result = False   # 无搜索结果标识符
     if form.is_valid():
         cd = form.cleaned_data
         if cd['query'][0:2] == 'T:':
@@ -156,14 +164,19 @@ def search(request):
         else:
             cards = Card.objects.filter(
                 Q(question__icontains=cd['query']) | Q(example__icontains=cd['query']))
-            # 将搜索字段替换为红色
-            for card in cards:
-                card.question = card.question.replace(cd['query'], "<span id='red'><b>" + cd['query'] + "</b></span>")
-                card.example = card.example.replace(cd['query'], "<span id='red'><b>" + cd['query'] + "</b></span>")
-
-    if cd['query'] == '':
+            if not len(cards):
+                no_result = True
+            else:
+                # 将搜索字段替换为红色
+                for card in cards:
+                    card.question = card.question.replace(cd['query'], "<span id='red'><b>" + cd['query'] + "</b></span>")
+                    card.example = card.example.replace(cd['query'], "<span id='red'><b>" + cd['query'] + "</b></span>")
+    else:
         form = SearchForm()
-    return render(request, 'flashcards/search.html', {'cards': cards, 'searchvalue': cd['query'], 'form': form})
+        return render(request, 'flashcards/search.html', {'searchvalue': cd['query'],
+                                                          'form': form, 'no_result': no_result})
+    return render(request, 'flashcards/search.html', {'cards': cards, 'searchvalue': cd['query'],
+                                                      'form': form, 'no_result': no_result})
 
 
 # 撤回：删除背诵记录
@@ -477,7 +490,6 @@ def word_add(request):
             set.current_group = json.dumps(set_group)
             set.save()
         word.save()
-
         return JsonResponse({'status': 'ok'})
     else:
         return render(request, 'flashcards/card_create.html')
@@ -493,7 +505,6 @@ def word_delete(request, word_id):
 @login_required
 def settings_view(request):
     settings = request.user.settings.all()[0]
-
     # 根据有无path来判断是GET还是POST
     if not ("path" in request.POST):
         return render(request, 'flashcards/settings.html', {'random_example': settings.random_example})
@@ -602,7 +613,4 @@ def export_db(request):
     return FileResponse(open('db.sqlite3', 'rb'), as_attachment=True)
 
 
-class CourseEnrollView(APIView):
-    def get(self, request):
-        card = Card.objects.all()[0]
-        return Response({'card': card.question})
+

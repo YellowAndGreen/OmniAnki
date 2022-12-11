@@ -14,22 +14,11 @@
             display: none;
         }
 
-        #footer {
-            position: fixed;
-            bottom: 0;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-
-        #Anki {
-            display: none;
-        }
-
         button {
-          -webkit-user-select: text;  /* Chrome all / Safari all */
-          -moz-user-select: text;     /* Firefox all */
-          -ms-user-select: text;      /* IE 10+ */
-          user-select: text;
+            -webkit-user-select: text; /* Chrome all / Safari all */
+            -moz-user-select: text; /* Firefox all */
+            -ms-user-select: text; /* IE 10+ */
+            user-select: text;
         }
     </style>
 {% endblock %}
@@ -41,223 +30,82 @@
            aria-expanded="false">
             Card
         </a>
-        <ul class="dropdown-menu" aria-labelledby="Edit">
+        <ul class="dropdown-menu bg-light text-center" aria-labelledby="Edit">
             <li><a class="dropdown-item" href="{% url 'flashcards:word_add_tags' object.id 'marked' 0 %}">Mark!</a></li>
             <li><a class="dropdown-item " href="#EditCard" data-bs-toggle="offcanvas" role="button"
                    aria-controls="EditCard">Edit</a></li>
             <li><a class="dropdown-item" href="{% url 'flashcards:word_delete' object.id %}">Delete</a></li>
             <li><a class="dropdown-item" href="{% url 'flashcards:word_add' %}">Add Word</a></li>
-            <li>
-                <form class="ms-3" method="post" action="{% url 'flashcards:settings_view' %}">
-                    <div class="form-check form-switch ">
-                        {% csrf_token %}
-                        <label class="form-check-label" for="flexSwitchCheckDefault">随机例句</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
-                               name="random_example" {% if random_example %}checked{% endif %}>
-                        <input class="" type="text" name="path" style="display: none" value="{{ request.path }}">
-
-                    </div>
-                <button type="submit" class="h6" >Submit!</button>
-                </form>
-            </li>
         </ul>
     </li>
-    <!--编辑单词表单-->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="EditCard" aria-labelledby="EditCardLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="EditCardLabel">编辑单词</h5>
-
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <form id='form1' class="align-items-center col-12 " method="post"
-                  action="{% url 'flashcards:word_edit' object.id 0 %}">
-                <div class="form-floating mb-3 mt-3">
-
-                    <input type="text" class="form-control" id="floatingInput0" placeholder="" name="group"
-                           value="{{ object.group|safe }}">
-                    <label for="floatingInput0">group</label>
-                </div>
-                <div class="form-floating mb-3 mt-3">
-                    <input type="text" class="form-control" id="floatingInput1" placeholder="" name="question"
-                           value="{{ object.question|safe }}">
-                    <label for="floatingInput1">question</label>
-                </div>
-                <div class="form-floating mb-3 mt-3">
-
-                    <input type="text" class="form-control" id="floatingInput2" placeholder="" name="answer"
-                           value="{{ object.answer|pureword|safe }}">
-                    <label for="floatingInput2">answer</label>
-                </div>
-
-                <div class="form-floating mb-3 mt-3">
-
-                    <input type="text" class="form-control" id="floatingInput3" placeholder="" name="example"
-                           value="{{ object.example|safe }}">
-                    <label for="floatingInput3">example</label>
-                </div>
-
-                <div class="form-floating mb-3 mt-3">
-
-                    <textarea type="text" class="form-control" id="floatingInput4" placeholder="" name="translation"
-                           value="{{ object.translation|safe }}"></textarea>
-                    <label for="floatingInput4">translation</label>
-                </div>
-
-                <div class="form-floating mb-3 mt-3">
-
-                    <textarea type="text" class="form-control" id="floatingInput5" placeholder="" name="extra"
-                           value="{{ object.extra|safe }}"></textarea>
-                    <label for="floatingInput5">extra</label>
-                </div>
-
-                <div class="form-floating mb-3 mt-3">
-
-                    <input type="text" class="form-control" id="floatingInput6" placeholder="" name="tag">
-                    <label for="floatingInput6">Add Tag</label>
-                </div>
-                <button type="submit" class="btn btn-outline-primary">Submit!</button>
-
-                {% csrf_token %}
-
-            </form>
-        </div>
-    </div>
 {% endblock %}
 {% block content %}
 
-    {% block progressbar %}
-    {% endblock %}
     <!-- 卡片正面 -->
-    <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingZero">
-                <div class="h6 d-flex flex-nowrap align-items-center mt-3 ms-3">
-                    {{ object.group }}
-                    <div class="ms-auto row">
-                        <div class="col">
-                            {% for tag in tags %}
-                                <span class="badge rounded-pill bg-primary position-relative">{{ tag }}
+    <div class="card h-100 shadow mt-2">
+        <div class="card-header align-items-center">
+            <div class="h6 d-flex flex-nowrap pt-2">
+                <span>{{ object.group }}</span>
+                <div class="ms-auto row">
+                    <div class="col">
+                        {% for tag in tags %}
+                            <span class="badge rounded-pill bg-primary position-relative">{{ tag }}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                       onClick="location.href='{% block deletetags %}{% endblock %}'">
     X
   </span></span>
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-            </h2>
-        </div>
-
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button collapsed " type="button" data-bs-toggle="collapse"
-                        data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
-                        onclick="play()">
-                    <div class="link">{{ object.question |pureword |safe }}</div>
-                </button>
-
-            </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
-                <div class="accordion-body">{{ object.answer |safe |linebreaks}}</div>
             </div>
+            {% block progressbar %}
+            {% endblock %}
         </div>
-        <div class="accordion-item" id="example">
-            <h2 class="accordion-header" id="flush-headingTwo">
-                <button id="example_button" class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                    <div>{{ object.example |safe}}</div>
-                </button>
-            </h2>
-            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
-                <div class="accordion-body">{{ object.translation |safe }}</div>
+        <div class="accordion accordion-flush shadow-sm" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed " type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne"
+                    onclick="audioplay()">
+                        <div class="link">{{ object.question |pureword |safe }}</div>
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
+                    <div class="accordion-body">{{ object.answer |safe |linebreaks }}</div>
+                </div>
             </div>
-        </div>
-        <div class="accordion-item" id="extra">
-            <h2 class="accordion-header" id="flush-headingThree">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#flush-collapseThree" aria-expanded="true" aria-controls="flush-collapseThree">
-                    EXTRA
-                </button>
-            </h2>
-            <div id="flush-collapseThree" class="accordion-collapse  open" aria-labelledby="flush-headingThree"
-                 data-bs-parent="#accordionFlushExample">
-                <div id="extra_button" class="accordion-body">{{ object.extra |safe }}</div>
-            </div>
+            {% if object.example %}
+                <div class="accordion-item" id="example">
+                    <h2 class="accordion-header" id="flush-headingTwo">
+                        <button id="example_button" class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                                aria-controls="flush-collapseTwo">
+                            <div>{{ object.example |safe }}</div>
+                        </button>
+                    </h2>
+                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
+                        <div class="accordion-body">{{ object.translation |safe }}</div>
+                    </div>
+                </div>{% endif %}
+            {% if object.extra %}
+                <div class="accordion-item" id="extra">
+                    <h2 class="accordion-header" id="flush-headingThree">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseThree" aria-expanded="true"
+                                aria-controls="flush-collapseThree">
+                            EXTRA
+                        </button>
+                    </h2>
+                    <div id="flush-collapseThree" class="accordion-collapse  open" aria-labelledby="flush-headingThree"
+                         data-bs-parent="#accordionFlushExample">
+                        <div id="extra_button" class="accordion-body">{{ object.extra |safe }}</div>
+                    </div>
+                </div>{% endif %}
         </div>
     </div>
-
-    <!-- 音频 -->
-    <audio autoplay id="audio" src={{ object.question|pureword|youdao }}>ERROR</audio>
-
-        <!-- 单词查询弹出窗 -->
-        <div class="position-fixed top-0 start-50 translate-middle-x col-10 toast-window"
-             style="z-index: 11; height: 90%;display: none">
-            <div id="liveToast" class="toast col-12 p-3" data-bs-autohide=false role="alert" aria-live="assertive"
-                 aria-atomic="true" style="width: 100%;height: 100%;">
-                <div class="toast-header">
-
-                    <strong class="me-auto query_word"></strong>剑桥高阶
-                    <small class="ms-auto">now</small>
-                    <button type="button" class="btn-close toast-window-close" data-bs-dismiss="toast"
-                            aria-label="Close"></button>
-                </div>
-                <div class="toast-body" style="height: 90%;overflow: auto">
-                    <div class=" query_word_result "></div>
-                </div>
-            </div>
-        </div>
 {% endblock %}
 
 
 {% block domready %}
-var toastTrigger = document.getElementById('liveToastBtn')
-var toastLiveExample = document.getElementById('liveToast')
-
-function getWord(){
-  var word = window.getSelection?    window.getSelection():    document.selection.createRange().text
-  if (word.toString()!=="") {
-    $.post('{% url "flashcards:dict_query" %}',
-    {
-      query_word: word.toString()
-    },
-    function(data){
-      $(".query_word_result").html(data["html_result"])
-      var toast = new bootstrap.Toast(toastLiveExample)
-      toast.show()
-      $(".toast-window").css("display",'inline')
-    }
-  );
-  }
-}
-    // 防止阻挡到其他元素
-$(".toast-window-close").click(function(){
-    $(".toast-window").css("display",'none')
-})
-
-//document.body.addEventListener("click", getWord, false)
-//document.body.addEventListener("tap", getWord, false)
-//$('body#content').click(getWord)
-//$('body#content').on("click",getWord)
-$("body").on("click",function(e){
-    //console.log(e.target.className!==' query_word_result ')
-    //console.log(e.target.className)
-    getWord();
-    window.getSelection().empty();
-});
-
-$("body").on('click',function (e) {
-    // 在弹出框之外点击删除弹出框
-    if($(".toast-window").css("display") !== 'none'&&e.target.className!==' query_word_result '&&e.target.className!=='toast-body'&&e.target.className!==''){
-        $(".toast-window").css("display",'none');
-    }
-})
-
-$("body").on("touchstart",function(e){
-    setTimeout(function (){
-        getWord();
-    }, 1000);
-    window.getSelection().empty();
-
-});
 {% endblock %}

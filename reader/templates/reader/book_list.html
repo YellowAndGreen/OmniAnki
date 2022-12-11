@@ -11,10 +11,10 @@
 
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row row-cols-md-3 row-cols-sm-1 g-4">
         {% for article in books %}
 
-            <div class="card col-md-1 m-2 col-lg-3" aria-hidden="true" >
+            <div class="card col-sm-12 col-md-4" aria-hidden="true" >
 
                     <img src="{% static 'img/books/cover.jpg' %}" class="card-img-top placeholder-glow" alt="..." onclick="location.href='{% url 'reader:book_detail' article.id%}'">
 

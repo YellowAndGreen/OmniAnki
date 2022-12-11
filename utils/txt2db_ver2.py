@@ -37,7 +37,6 @@ for i in range(data.shape[0]):
                 forget_num=int(data['遗忘次数'][i]),
                 review_num=int(data['复习'][i]),
                 ratio=int(data['简易度'][i][0:-2]),
-
                 )
     card.save()
 # 判断是否有标签，在上面执行后使用

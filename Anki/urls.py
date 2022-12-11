@@ -20,7 +20,8 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('flashcards/', include("flashcards.urls", namespace="flashcards")),
+    # path('flashcards/', include("flashcards.urls", namespace="flashcards")),
+    path('', include("flashcards.urls", namespace="flashcards")),
     path('account/', include('account.urls', namespace='account')),
     path('todo/', include('todo.urls', namespace='todo')),
     path('reader/', include('reader.urls', namespace='reader')),
