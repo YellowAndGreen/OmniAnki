@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'flashcards.apps.FlashcardsConfig',
     'taggit',
-    'todo.apps.TodoConfig',
     'django_crontab',
     'reader.apps.ReaderConfig',
 ]

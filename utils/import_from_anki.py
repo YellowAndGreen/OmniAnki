@@ -3,7 +3,7 @@ import re
 from flashcards.models import Card
 import datetime
 
-data = pd.read_excel('C:\\Users\\Administrator\\Desktop\\Anki\\utils\\anki.xlsx'
+data = pd.read_excel('utils/resources/anki_demo_data.xlsx'
                      '', sheet_name='Sheet1', header=0)
 
 for i in range(data.shape[0]):
