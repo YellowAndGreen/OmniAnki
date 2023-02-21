@@ -1,6 +1,8 @@
 # OmniAnki - a parody of Anki
+[中文README](./README_ZH.md)  - [detail说明](./detail.md)  -  [Online Demo](http://yellowandgreen.xyz:7777)
 
 A card review tool that has built-in readers to provide an end-to-end language learning experience!
+
 
 ## **WHY?**
 
@@ -31,7 +33,7 @@ python manage.py migrate
 python manage.py runserver 0:80
 ```
 
-## Deploy with Dockerfile
+## Deploy with Dockerfile(Recommended)
 
 ~~~shell
 docker-compose up -d
@@ -47,8 +49,8 @@ docker run -it -p 8000:80 --name anki_img anki_img:1.0
 
 ## Account
 
-user：xu 
-password: 5500
+user: admin 
+password: 1234
 
 ### Add User
 

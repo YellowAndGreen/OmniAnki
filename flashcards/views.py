@@ -464,8 +464,8 @@ def word_edit(request, word_id, section):
 
 @login_required
 def word_add(request):
-    set = request.user.settings.all()[0]
-    set_group = json.loads(set.current_group)
+    # set = request.user.settings.all()[0]
+    # set_group = json.loads(set.current_group)
     if request.POST:
         word = Card()
         cd = request.POST
@@ -477,18 +477,18 @@ def word_add(request):
         word.extra = cd['extra']
         if cd['tag'] != '':
             word.tags.add(cd['tag'])
-        # 仅在前两字为词汇或者整个为空的时候进行检查
-        if word.group == '' or word.group[0:2] == '词汇':
-            # 检查setting中数值是否大于等于50，若大于50，则group加1,数量初始化为1，最后保存set
-            if set_group['max_word_num'] >= 50:
-                set_group['max_word_group'] += 1
-                set_group['max_word_num'] = 0
-            # 转化为最大group并转为中文
-            word.group = ''.join(['词汇-第', to_chinese(set_group['max_word_group']), '组'])
-            # 最后num数加一
-            set_group['max_word_num'] += 1
-            set.current_group = json.dumps(set_group)
-            set.save()
+        # # 仅在前两字为词汇或者整个为空的时候进行检查
+        # if word.group == '' or word.group[0:2] == '词汇':
+        #     # 检查setting中数值是否大于等于50，若大于50，则group加1,数量初始化为1，最后保存set
+        #     if set_group['max_word_num'] >= 50:
+        #         set_group['max_word_group'] += 1
+        #         set_group['max_word_num'] = 0
+        #     # 转化为最大group并转为中文
+        #     word.group = ''.join(['词汇-第', to_chinese(set_group['max_word_group']), '组'])
+        #     # 最后num数加一
+        #     set_group['max_word_num'] += 1
+        #     set.current_group = json.dumps(set_group)
+        #     set.save()
         word.save()
         return JsonResponse({'status': 'ok'})
     else:

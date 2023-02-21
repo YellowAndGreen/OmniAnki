@@ -1,4 +1,5 @@
 # OmniAnki
+[README](./README.md)  - [详细说明](./detail.md)  -  [在线演示](http://yellowandgreen.xyz:7777)
 
 英语卡片单词记忆工具
 
@@ -6,7 +7,6 @@
 
 > 虽然Anki提供了丰富的功能和插件系统，但对于开发者而已还需要额外了解PyQt和相关api，具有有一定的学习成本。且Anki的在线同步功能时好时坏，很难完全掌控自己的单词库，因此我作为一个django新手实现了一个简易的Anki。在其中也加入了自己对于单词记忆的想法。
 
-The aim of OmniAnki is **to create a web-based end-to-end memory-card tool** that provides an easier method to get around the following processes:
 理想的端到端单词记忆软件应该有简单易用的方法来学习英语：
 1. 阅读语料
 2. 收集信息并整理成单词例句格式
@@ -48,22 +48,12 @@ python manage.py migrate
 python manage.py runserver 0:80
 ```
 
-## Deploy with Dockerfile
+## Deploy with Dockerfile(Recommended)
 
 ~~~shell
-# 构建Anki镜像
-docker build -t anki:1.0 .
-
-# 将镜像作为容器运行
-docker run -it -p 8000:80 --name Anki anki:1.0
-
-# 初始化后端数据(第一次执行即可)
-docker exec -ti Anki \bin\sh
-python manage.py makemigrations 
-python manage.py migrate
-python manage.py init -y
-exit
+docker-compose up -d
 ~~~
+
 
 ## Deploy with Remote Docker Image
 
@@ -94,7 +84,8 @@ docker run -it -p 8000:80 --name anki_img anki_img:1.0
 
 ## User
 
-默认用户：xu 密码 5500
+默认用户：admin 
+密码: 1234
 
 ### Add User
 

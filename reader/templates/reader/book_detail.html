@@ -1,4 +1,4 @@
-{% extends "reader/base.html" %}
+{% extends "flashcards/base.html" %}
 {% load static %}
 
 {% block title %}Books{% endblock %}
@@ -6,8 +6,8 @@
 {% block head %}
     <style>
         body{
-            margin-left: 5% !important;
-            margin-right: 5% !important;
+            margin-left: 0% !important;
+            margin-right: 0% !important;
         }
         #footer {
             position: fixed;
@@ -18,10 +18,19 @@
     </style>
 {% endblock %}
 
+{% block navbar %}
+    <li class="nav-item">
+        <a class="p-2 nav-link" href={% url 'reader:article_list' %}>Reader</a>
+    </li>
+    <li class="nav-item">
+        <a class="p-2 nav-link active" href={% url 'reader:read_book' %}>Book</a>
+    </li>
+{% endblock %}
+
 {% block content %}
-    <div>
-    {{ book.content |safe}}
-    </div>
+        <div class="card h-100 shadow placeholder-glow m-2">
+        <div class="card-body p-8">{{ book.content |safe}}
+        </div></div>
 {% endblock %}
 
 {% block footer %}

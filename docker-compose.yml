@@ -10,7 +10,7 @@ services:
 #    使用dockerfile构建镜像
     build:
       context: .
-      dockerfile: ./docker-env/django/Dockerfile
+      dockerfile: ./Dockerfile
     command: uwsgi --ini config/uwsgi.ini  # 容器启动后启动web服务器
     networks:
       - anki_network

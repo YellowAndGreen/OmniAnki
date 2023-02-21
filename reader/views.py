@@ -17,7 +17,7 @@ def article_detailview(request, article_id):
 
 def article_list(request):
     articles = Article.objects.all()
-    paginator = Paginator(articles, 10)  # 20 articles in each page
+    paginator = Paginator(articles, 12)  # 20 articles in each page
     page = request.GET.get('page')  # 当前页数
 
     try:

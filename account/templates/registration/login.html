@@ -1,31 +1,67 @@
-{% extends "flashcards/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Login{% endblock %}
+{% block head %}
+    <style>
+        /* forms */
+        form {
+            overflow: auto;
+        }
 
+        form p {
+            width: 100%;
+            overflow: auto;
+        }
+
+        label {
+            float: left;
+            clear: both;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        input, textarea {
+            clear: both;
+            float: left;
+            margin: 0 0 10px;
+            background: #efefef;
+            border: 0;
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+
+        input[type=submit], a.button {
+            font-weight: bold;
+            background: #12c064;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+    </style>
+{% endblock %}
 {% block content %}
     <div class="card h-100 shadow mt-2">
         <div class="card-header align-items-center">Login
         </div>
         <div class="card-body align-items-center">
-            {% if form.errors %}
-                <p>
-                    Your username and password didn't match.
-                    Please try again.
-                </p>
-            {% else %}
-                <p>Please, use the following form to log-in.</p>
-            {% endif %}
-            <div class="login-form">
-                <form action="{% url 'account:login' %}" method="post">
-                    {{ form.as_p }}
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ next }}"/>
-                    <p><input type="submit" value="Login"></p>
-                </form>
-            </div>
+                {% if form.errors %}
+                    <p>
+                        Your username and password didn't match.
+                        Please try again.
+                    </p>
+                {% else %}
+                    <p>Please, use the following form to login.</p>
+                {% endif %}
+                <div class="login-form">
+                    <form action="{% url 'account:login' %}" method="post">
+                        {{ form.as_p }}
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}"/>
+                        <p><input type="submit" value="Login"></p>
+                    </form>
+                </div>
         </div>
     </div>
-
-
 
 {% endblock %}

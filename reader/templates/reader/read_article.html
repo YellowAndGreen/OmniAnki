@@ -7,17 +7,19 @@
     <li class="nav-item">
         <a class="p-2 nav-link active" href={% url 'reader:article_list' %}>Reader</a>
     </li>
+    <li class="nav-item">
+        <a class="p-2 nav-link" href={% url 'reader:read_book' %}>Book</a>
+    </li>
 {% endblock %}
 
 {% block content %}
     <div class="card h-100 shadow placeholder-glow m-2">
+        <div class="card-header h5">{{ article.title }}</div>
         <div class="card-body p-8">
-            <p class="card-title h3 text-primary">{{ article.title }}</p>
             {% if article.top_image_url != 'none' %}
                 <div class="text-center">
-                <img src="{{ article.top_image_url }}" class="card-img-top placeholder" alt="..."
-                     onclick="location.href='{% url 'reader:article_detailview' article.id %}'"
-                     style="width: 75%;height: 75%;">
+                <img src="{{ article.top_image_url }}" class="card-img-top placeholder w-75" alt="..."
+                     onclick="location.href='{% url 'reader:article_detailview' article.id %}'">
                 </div>
             {% endif %}
             <p class="card-text"> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ article.content | linebreaksbr }}</p>

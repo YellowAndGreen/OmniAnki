@@ -1,40 +1,87 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="zh">
+
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <title>{% block title %}{% endblock %}</title>
-  <link href="{% static "base.css" %}" rel="stylesheet">
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link href="{% static "bootstrap.css" %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static '/img/favicon.ico' %}"/>
+    {% block head %}{% endblock %}
+    <style>
+        @font-face {
+            font-family: "_Gurmukhi MN";
+            src: url('{% static '_Gurmukhi MN.ttc' %}');
+        }
+
+        @font-face {
+            font-family: "icon";
+            src: url('{% static 'font/SmileySans-Oblique.ttf.woff2' %}') format("woff");
+        }
+
+        .navbar-brand, .icon {
+            font-family: icon, serif;
+        }
+
+        body {
+            font-family: _Gurmukhi MN, serif;
+        }
+    </style>
 </head>
 <body>
-  <div id="header">
-    <span class="logo">Anki</span>
-    {% if request.user.is_authenticated %}
-
-  {% endif %}
-  <span class="user">
-    {% if request.user.is_authenticated %}
-      Hello {{ request.user.first_name }},
-      <a href="{% url 'account:logout' %}">Logout</a>
-    {% else %}
-      <a href="{% url "account:login" %}">Log-in</a>
-    {% endif %}
-  </span>
-  </div>
-
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li class="{{ message.tags }}">
-          {{ message|safe }}
-            <a href="#" class="close">x</a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
-  <div id="content">
+<nav class="navbar navbar-expand-xl navbar-light bg-light text-center align-items-center sticky-top">
+    <div class="container-fluid">
+        <a href="{% url "flashcards:dashboard" %}" class="">
+            <img src="{% static '/img/fuyou.png' %}" class="d-block h-100" alt="fail to load" width="50px"
+                 height="50px">
+        </a>
+        <a class="navbar-brand fs-4" href="{% url "flashcards:dashboard" %}">OmniAnki</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse show" id="navbarText">
+            <ul class="nav nav-tabs ">
+                <li class="nav-item" id="Anki">
+                    <a class="p-2 nav-link {% block Anki %}{% endblock %}"
+                       href="{% url "flashcards:dashboard" %}">Anki</a>
+                </li>
+                <li class="nav-item">
+                    <a class="p-2 nav-link {% block Recite %}{% endblock %}" href={% url 'flashcards:next' %}>Recite</a>
+                </li>
+                <li class="nav-item">
+                    <a class="p-2 nav-link {% block Search %}{% endblock %}"
+                       href={% url 'flashcards:search' %}>Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="p-2 nav-link {% block Dict %}{% endblock %}" href={% url 'flashcards:dict' %}>Dict</a>
+                </li>
+                {% block navbar %}{% endblock %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid" id="content">
     {% block content %}
     {% endblock %}
-  </div>
+</div>
+
+<!-- 底部栏 -->
+<footer class="container-fluid text-center fixed-bottom">
+    {% block footer %}
+    {% endblock %}
+</footer>
+
+<script src="{% static "popper.min.js" %}"></script>
+<script src="{% static "bootstrap.js" %}"></script>
+<script src="{% static 'jquery.min.js' %}"></script>
+<script src="{% static 'js.cookie.min.js' %}"></script>
+    <script>
+    $("input").addClass("form-control");
+    </script>
 </body>
 </html>

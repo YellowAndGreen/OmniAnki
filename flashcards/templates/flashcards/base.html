@@ -30,12 +30,66 @@
         body {
             font-family: _Gurmukhi MN, serif;
         }
+
+        /*
+         *  scrollbar1
+         */
+
+        .toast-body::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #F5F5F5;
+            border-radius: 10px;
+        }
+
+        .toast-body::-webkit-scrollbar {
+            width: 5px;
+            background-color: #F5F5F5;
+        }
+
+        .toast-body::-webkit-scrollbar-thumb {
+            background-color: #F90;
+            border-radius: 10px;
+            background-image: -webkit-linear-gradient(45deg,
+            rgba(255, 255, 255, .2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, .2) 50%,
+            rgba(255, 255, 255, .2) 75%,
+            transparent 75%,
+            transparent)
+        }
+
+        /*
+         *  scrollbar2
+         */
+
+        body::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #F5F5F5;
+            border-radius: 10px;
+        }
+
+        body::-webkit-scrollbar {
+            width: 10px;
+            background-color: #F5F5F5;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-image: -webkit-gradient(linear,
+            left bottom,
+            left top,
+            color-stop(0.44, rgb(122, 153, 217)),
+            color-stop(0.72, rgb(73, 125, 189)),
+            color-stop(0.86, rgb(28, 58, 148)));
+        }
+
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-xl navbar-light bg-light text-center align-items-center sticky-top">
     <div class="container-fluid">
-        <a href="{% url "flashcards:dashboard" %}" class="">
+        <a href="https://github.com/YellowAndGreen/OmniAnki" class="">
             <img src="{% static '/img/fuyou.png' %}" class="d-block h-100" alt="fail to load" width="50px"
                  height="50px">
         </a>
@@ -49,9 +103,6 @@
                 <li class="nav-item" id="Anki">
                     <a class="p-2 nav-link {% block Anki %}{% endblock %}"
                        href="{% url "flashcards:dashboard" %}">Anki</a>
-                </li>
-                <li class="nav-item">
-                    <a class="p-2 nav-link {% block Recite %}{% endblock %}" href={% url 'flashcards:next' %}>Recite</a>
                 </li>
                 <li class="nav-item">
                     <a class="p-2 nav-link {% block Search %}{% endblock %}"
@@ -78,24 +129,27 @@
     <!-- 单词查询弹出窗 -->
     <div class="position-fixed top-0 start-50 translate-middle-x col-10 toast-window mt-4 mb-4"
          style="z-index: 1100; height: 90%;display: none">
-        <div id="liveToast" class="toast col-12 p-3" data-bs-autohide=false role="alert" aria-live="assertive"
+        <div id="liveToast" class="toast col-12 p-1" data-bs-autohide=false role="alert" aria-live="assertive"
              aria-atomic="true" style="width: 100%;height: 100%;">
             <div class="toast-header">
-                <strong class="me-auto query_word">剑桥高阶 <span class="ms-2" id='rank'></span></strong>
-                <div id="audio_button">
+                <strong class="me-auto query_word text-warning">剑桥高阶</strong>
+                <div id="audio_button" class="text-black">
                     <strong id="audio_text"></strong>
                     <img id="audio_img" alt="..." src="{% static '/img/sound.png' %}" width="20px"
                          height="20px">
                 </div>
                 <div class="ms-auto">
-                    <a class="me-2" id="SearchWordBank" target="_blank">查词库</a>
-                    <a class="" href="#EditCard" data-bs-toggle="offcanvas" role="button"
-                       aria-controls="EditCard" id="AddWordButton">添加单词</a>
+                    <span class="ms-2 text-info" id='rank'></span>
                 </div>
                 <button type="button" class="btn-close toast-window-close" data-bs-dismiss="toast"
                         aria-label="Close"></button>
             </div>
-            <div class="toast-body query_word_result" style="height: 90%;overflow: auto;">
+            <div class="toast-body" style="height: 90%;overflow: auto;">
+                                    <a class="me-2" id="SearchWordBank" target="_blank">查词库</a>
+                    <a class="" href="#EditCard" data-bs-toggle="offcanvas" role="button"
+                       aria-controls="EditCard" id="AddWordButton">添加单词</a>
+                <div class="query_word_result">
+                </div>
             </div>
         </div>
     </div>
@@ -269,7 +323,7 @@ $(document).ready(function () {
                     $('#audio_text').text(data_query_word)
                     window.getSelection().empty();
                     //词汇rank值
-                    $("#rank").text("RANK:" + data["rank"])
+                    $("#rank").text(data["rank"])
                     //查词库的链接
                     $('#SearchWordBank').attr('href', "{% url "flashcards:search"%}" + "?query=" + data_query_word)
                 }
@@ -484,10 +538,11 @@ $(document).ready(function () {
     {% block domready %}
     {% endblock %}
 });
-    // 点击卡片单词发音
-    function audioplay() {
-        $("#audio")[0].play();
-    }
+
+// 点击卡片单词发音
+function audioplay() {
+    $("#audio")[0].play();
+}
 </script>
 
 
